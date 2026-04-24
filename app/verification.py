@@ -1,5 +1,6 @@
 import tkinter as tk
-from ..scripts.midi_manager import MidiManager
+from scripts.midi_manager import MidiManager
+from tkinter import filedialog as fd
 
 
 class VerificationWindow(tk.Tk):
