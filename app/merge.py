@@ -5,9 +5,7 @@ from scripts.midi_manager import MidiManager
 class MergeWindow(tk.Tk):
 
     def __init__(self):
-        super().__init__()
-        self.title("test")
-        self.geometry('400x200')
+        pass
 
     def create_widgets(self):
         pass
