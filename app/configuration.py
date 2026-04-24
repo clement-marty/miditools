@@ -1,6 +1,6 @@
 import tkinter as tk
 from .channel_assignment import ChannelAssignmentWindow
-from ..scripts.sysex import SysExConfiguration
+from scripts.sysex import SysExConfiguration
 
 
 class ConfigurationWindow(tk.Tk):
