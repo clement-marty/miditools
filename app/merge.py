@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.filedialog as fd
 from scripts.midi_manager import MidiManager
 
 
@@ -32,9 +33,18 @@ class MergeWindow(tk.Tk):
         canvas.create_window((0, 0), window=self.list_frame, anchor=tk.CENTER, width=620)
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
-
     def add_file(self, event: tk.Event) -> None:
-        pass
+        filenames = fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
+        for filename in filenames:
+            widget = FileListElement(self.list_frame, filename)
+            self.file_widgets.append(widget)
+
+            # Bind the widget's buttons to the MergeWindow methods
+            widget.move_up_btn.bind('<Button-1>', self.move_up)
+            widget.move_down_btn.bind('<Button-1>', self.move_down)
+            widget.remove_btn.bind('<Button-1>', self.remove_file)
+            
+            widget.pack(fill=tk.X)
 
     def remove_file(self, event: tk.Event) -> None:
         pass
