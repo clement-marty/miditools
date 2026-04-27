@@ -68,13 +68,13 @@ class FileListElement(tk.Frame):
         super().__init__(master)
         self.file_path = file_path
         self.filename = file_path.split('/')[-1]
-        btn_width = 10
+        btn_width = 6
 
         filename_label = tk.Label(self, text=self.filename)
         filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
 
-        self.move_up_btn = tk.Button(self, text='Move Up', width=btn_width)
-        self.move_down_btn = tk.Button(self, text='Move Down', width=btn_width)
+        self.move_up_btn = tk.Button(self, text='Up', width=btn_width)
+        self.move_down_btn = tk.Button(self, text='Down', width=btn_width)
         self.remove_btn = tk.Button(self, text='Remove', width=btn_width)
 
         self.remove_btn.pack(side=tk.RIGHT)
