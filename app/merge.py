@@ -73,10 +73,24 @@ class MergeWindow(tk.Tk):
         obj.destroy()
 
     def move_up(self, event: tk.Event) -> None:
-        pass
+        obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
+        i = self.file_widgets.index(obj)
+        if i > 0 and len(self.file_widgets) >= 2:
+            self.swap_files(i-1, i)
 
     def move_down(self, event: tk.Event) -> None:
-        pass
+        obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
+        i = self.file_widgets.index(obj)
+        if i < len(self.file_widgets)-1 and len(self.file_widgets) >= 2:
+            self.swap_files(i, i+1)
+
+    def swap_files(self, index1: int, index2: int) -> None:
+        # Invert the two elements in the list
+        self.file_widgets[index1], self.file_widgets[index2] = self.file_widgets[index2], self.file_widgets[index1]
+
+        # Repack all instances of FileListElement
+        for obj in self.file_widgets: obj.pack_forget()
+        for obj in self.file_widgets: obj.pack(fill=tk.X)
 
     def merge(self, event: tk.Event) -> None:
         pass
