@@ -30,7 +30,7 @@ class MergeWindow(tk.Tk):
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         canvas.configure(yscrollcommand=scrollbar.set)
         self.list_frame = tk.Frame(canvas)
-        canvas.create_window((0, 0), window=self.list_frame, anchor=tk.CENTER, width=620)
+        canvas.create_window((0, 0), window=self.list_frame, anchor=tk.N, width=620)
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def add_file(self, event: tk.Event) -> None:
@@ -47,7 +47,9 @@ class MergeWindow(tk.Tk):
             widget.pack(fill=tk.X)
 
     def remove_file(self, event: tk.Event) -> None:
-        pass
+        obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
+        self.file_widgets.remove(obj)
+        obj.destroy()
 
     def move_up(self, event: tk.Event) -> None:
         pass
