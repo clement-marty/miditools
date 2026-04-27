@@ -3,6 +3,27 @@ import tkinter.filedialog as fd
 from scripts.midi_manager import MidiManager
 
 
+class FileListElement(tk.Frame):
+
+    def __init__(self, master: tk.Tk, file_path: str) -> None:
+        super().__init__(master)
+        self.file_path = file_path
+        self.filename = file_path.split('/')[-1]
+        btn_width = 6
+
+        filename_label = tk.Label(self, text=self.filename)
+        filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
+
+        self.move_up_btn = tk.Button(self, text='Up', width=btn_width)
+        self.move_down_btn = tk.Button(self, text='Down', width=btn_width)
+        self.remove_btn = tk.Button(self, text='Remove', width=btn_width)
+
+        self.remove_btn.pack(side=tk.RIGHT)
+        self.move_down_btn.pack(side=tk.RIGHT)
+        self.move_up_btn.pack(side=tk.RIGHT)
+
+
+
 class MergeWindow(tk.Tk):
 
     def __init__(self):
@@ -59,24 +80,3 @@ class MergeWindow(tk.Tk):
 
     def merge(self, event: tk.Event) -> None:
         pass
-
-
-
-class FileListElement(tk.Frame):
-
-    def __init__(self, master: tk.Tk, file_path: str) -> None:
-        super().__init__(master)
-        self.file_path = file_path
-        self.filename = file_path.split('/')[-1]
-        btn_width = 6
-
-        filename_label = tk.Label(self, text=self.filename)
-        filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
-
-        self.move_up_btn = tk.Button(self, text='Up', width=btn_width)
-        self.move_down_btn = tk.Button(self, text='Down', width=btn_width)
-        self.remove_btn = tk.Button(self, text='Remove', width=btn_width)
-
-        self.remove_btn.pack(side=tk.RIGHT)
-        self.move_down_btn.pack(side=tk.RIGHT)
-        self.move_up_btn.pack(side=tk.RIGHT)
