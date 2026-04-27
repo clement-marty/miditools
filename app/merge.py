@@ -53,8 +53,18 @@ class MergeWindow(tk.Tk):
 class FileListElement(tk.Frame):
 
     def __init__(self, master: tk.Tk, file_path: str) -> None:
-        pass
+        super().__init__(master)
+        self.file_path = file_path
+        self.filename = file_path.split('/')[-1]
+        btn_width = 10
 
+        filename_label = tk.Label(self, text=self.filename)
+        filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
 
-# app = MergeWindow()
-# app.mainloop()
+        self.move_up_btn = tk.Button(self, text='Move Up', width=btn_width)
+        self.move_down_btn = tk.Button(self, text='Move Down', width=btn_width)
+        self.remove_btn = tk.Button(self, text='Remove', width=btn_width)
+
+        self.remove_btn.pack(side=tk.RIGHT)
+        self.move_down_btn.pack(side=tk.RIGHT)
+        self.move_up_btn.pack(side=tk.RIGHT)
