@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.filedialog as fd
+import tkinter.messagebox as mb
 from scripts.midi_manager import MidiManager
 
 
@@ -118,4 +119,20 @@ class MergeWindow(tk.Tk):
             elif i == len(self.file_widgets)-1: obj.move_down_btn.config(state='disabled')
 
     def merge(self, event: tk.Event) -> None:
-        pass
+        # Show an error if there are not enough file to merge
+        if len(self.file_widgets) <= 1:
+            mb.showerror('Error', 'Please add at least two files before merging.')
+
+        else:
+            output_path = fd.asksaveasfilename(defaultextension='.mid', filetypes=[('Midi Files', '*.mid *.midi')])
+            if output_path != '':
+                filepaths = []
+                for obj in self.file_widgets:
+                    filepaths.append(obj.file_path)
+                MidiManager.merge(filepaths, output_path)
+
+                mb.showinfo(
+                    title='Success',
+                    message='Successfully merged the files',
+                    detail=f'The new file was saved as:\n{output_path}'
+                )
