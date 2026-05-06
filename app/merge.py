@@ -10,6 +10,10 @@ class FileListElement(tk.Frame):
         self.file_path = file_path
         self.filename = file_path.split('/')[-1]
         btn_width = 6
+        self.config(
+            highlightbackground='grey',
+            highlightthickness=1
+        )
 
         filename_label = tk.Label(self, text=self.filename)
         filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
