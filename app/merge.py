@@ -60,16 +60,29 @@ class MergeWindow(tk.Tk):
 
     def add_file(self, event: tk.Event) -> None:
         filenames = fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
-        for filename in filenames:
-            widget = FileListElement(self.list_frame, filename)
-            self.file_widgets.append(widget)
 
-            # Bind the widget's buttons to the MergeWindow methods
-            widget.move_up_btn.bind('<Button-1>', self.move_up)
-            widget.move_down_btn.bind('<Button-1>', self.move_down)
-            widget.remove_btn.bind('<Button-1>', self.remove_file)
-            
-            widget.pack(fill=tk.X)
+        if len(filenames) != 0:
+
+            # Reactivate the last FileListElement's move down button
+            if len(self.file_widgets) != 0:
+                self.file_widgets[-1].move_down_btn.config(state='normal')
+
+            # Add all new widgets
+            for filename in filenames:
+                widget = FileListElement(self.list_frame, filename)
+                self.file_widgets.append(widget)
+
+                # Bind the widget's buttons to the MergeWindow methods
+                widget.move_up_btn.bind('<Button-1>', self.move_up)
+                widget.move_down_btn.bind('<Button-1>', self.move_down)
+                widget.remove_btn.bind('<Button-1>', self.remove_file)
+                
+                widget.pack(fill=tk.X)
+
+            # Deactivate the last FileListElement's move down button
+            self.file_widgets[-1].move_down_btn.config(state='disabled')
+            # Deactivate the first element's move up button
+            self.file_widgets[0].move_up_btn.config(state='disabled')
 
     def remove_file(self, event: tk.Event) -> None:
         obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
@@ -93,8 +106,16 @@ class MergeWindow(tk.Tk):
         self.file_widgets[index1], self.file_widgets[index2] = self.file_widgets[index2], self.file_widgets[index1]
 
         # Repack all instances of FileListElement
-        for obj in self.file_widgets: obj.pack_forget()
-        for obj in self.file_widgets: obj.pack(fill=tk.X)
+        for obj in self.file_widgets:
+            obj.pack_forget()
+            obj.move_up_btn.config(state='normal')
+            obj.move_down_btn.config(state='normal')
+        for i, obj in enumerate(self.file_widgets):
+            obj.pack(fill=tk.X)
+            # Disable the move up button if the object is at the start of the list
+            if i == 0: obj.move_up_btn.config(state='disabled')
+            # Disable the move down button if the object is at the end of the list
+            elif i == len(self.file_widgets)-1: obj.move_down_btn.config(state='disabled')
 
     def merge(self, event: tk.Event) -> None:
         pass
