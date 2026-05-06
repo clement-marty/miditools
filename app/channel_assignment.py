@@ -30,6 +30,8 @@ class ChannelAssignmentWindow(tk.Toplevel):
     
     def __init__(self, master: tk.Tk) -> None:
         '''A Tkinter window handling the assignement of MIDI channels on tesla coils
+
+        :param tkinter.Tk master: The window's parent
         '''
         pass
 
