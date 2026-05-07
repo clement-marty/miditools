@@ -54,12 +54,38 @@ class ChannelAssignmentWindow(tk.Toplevel):
 
         :param tkinter.Tk master: The window's parent
         '''
-        pass
+        super().__init__(master)
+        self.title('MIDI Channel Assignment')
+        self.resizable(width=False, height=False)
+        self.assignments: dict[int, set[int]] = {
+            0: set(), 1: set(), 2: set()
+        }
+        self.rows: list[ChannelAssignmentRow] = []
+
+        self.create_widgets()
+        self.grab_set()
 
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
-        pass
+
+        column_labels_frame = tk.Frame(self)
+        for i in range(15, -1, -1):
+            channel_label = tk.Label(column_labels_frame, text=i, width=4)
+            channel_label.pack(side=tk.RIGHT)
+        column_labels_frame.pack(fill=tk.X)
+
+        self.rows = [
+            ChannelAssignmentRow(self, 0, 'Genepi'),
+            ChannelAssignmentRow(self, 1, 'Posipi'),
+            ChannelAssignmentRow(self, 2, 'Negapi')
+        ]
+        for row in self.rows:
+            row.pack(fill=tk.X)
+
+        close_btn = tk.Button(self, text='Close')
+        close_btn.bind('<Button-1>', self.close)
+        close_btn.pack(side=tk.BOTTOM, fill=tk.X)
 
     def update_assignments(self, coil: int, channel: int, value: bool) -> None:
         '''Updates the assignments dictionary for a given coil and MIDI channel
@@ -68,9 +94,12 @@ class ChannelAssignmentWindow(tk.Toplevel):
         :param int channel: The MIDI channel's id
         :param bool value: The new value to be set
         '''
-        pass
+        if value is True:
+            self.assignments[coil].add(channel)
+        elif channel in self.assignments[coil]:
+            self.assignments[coil].remove(channel)
 
     def close(self, event: tk.Event) -> None:
         '''Closes the window
         '''
-        pass
+        self.destroy()
