@@ -10,19 +10,40 @@ class ChannelAssignmentRow(tk.Frame):
         :param int coil_id: The tesla coil's id
         :param str coil_name: The tesla coil's name
         '''
-        pass
+        super().__init__(master)
+        self.coil_id, self.coil_name = coil_id, coil_name
+        self.buttons: list[tk.Button] = []
+        self.create_widgets()
 
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
-        pass
+
+        id_label = tk.Label(self, text=f'[coil_{self.coil_id}]', width=8)
+        id_label.pack(side=tk.LEFT)
+        name_label = tk.Label(self, text=self.coil_name, width=8)
+        name_label.pack(side=tk.LEFT)
+
+        for _ in range(15, -1, -1):
+            btn = tk.Button(self, text='', width=1, height=1, bg='red', activebackground='orange')
+            btn.bind('<Button-1>', self.toggle_btn_state)
+            btn.pack(side=tk.RIGHT)
+            self.buttons.insert(0, btn)
 
     def toggle_btn_state(self, event: tk.Event):
         '''Toggles a button on/off and updates the associated ChannelAssignmentWindow object
         
         :param tkinter.Event event: The event that triggered the function's execution
         '''
-        pass
+        btn: tk.Button = event.widget
+        value: bool
+        if btn['bg'] == 'red':
+            btn.config(bg='green')
+            value = True
+        else:
+            btn.config(bg='red')
+            value = False
+        self.master.update_assignments(self.coil_id, self.buttons.index(btn), value)
 
 
 
