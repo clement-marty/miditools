@@ -3,7 +3,6 @@ from .merge import MergeWindow
 from .verification import VerificationWindow
 from .configuration import ConfigurationWindow
 
-
 class StartWindow(tk.Tk):
 
     def __init__(self):
@@ -39,17 +38,16 @@ class StartWindow(tk.Tk):
             height=2,
             bg="#4f46e5",
             fg="white",
-
         )
-
+        btn.bind("<Button-1>", command)
         return btn
 
-    def open_merge_window(self):
+    def open_merge_window(self,event):
         MergeWindow(self).mainloop()
 
-    def open_verification_window(self):
+    def open_verification_window(self,event):
         VerificationWindow(self).mainloop()
 
-    def open_configuration_window(self):
+    def open_configuration_window(self,event):
         ConfigurationWindow(self).mainloop()
         
