@@ -65,6 +65,7 @@ class ChannelAssignmentWindow(tk.Toplevel):
         self.bound_var = bound_var
 
         self.create_widgets()
+        self.wait_visibility()
         self.grab_set()
 
     def create_widgets(self) -> None:
