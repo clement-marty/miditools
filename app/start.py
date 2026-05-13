@@ -1,40 +1,44 @@
 import tkinter as tk
-from .merge import MergeWindow
-from .verification import VerificationWindow
-from .configuration import ConfigurationWindow
+from merge import MergeWindow
+from verification import VerificationWindow
+from configuration import ConfigurationWindow
 
 
 class StartWindow(tk.Tk):
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
-        self.title("MIDI TOOLS")
-        self.geometry("400x200")
+        self.title("MIDI Tools")
+        self.geometry("600x450")
+        self.configure(bg="#1e1e2f")
+        self.resizable(False, False)
         self.create_widgets()
 
     def create_widgets(self):
-        lbl_1 = tk.Label(self, text = "Configuration")
-        lbl_1.grid(row =1, column = 1)
-        lbl_1.button.bind("<Button-1>", self.open_configuration_window)
-
-        lbl_2 = tk.Label(self, text = "Verification")
-        lbl_2.grid(row =2, column = 1)
-        lbl_2.button.bind("<Button-1>", self.open_verification_window)
-
-        lbl_3 = tk.Label(self, text = "Merge")
-        lbl_3.grid(row =3, column = 1)
-        lbl_3.button.bind("<Button-1>", self.open_merge_window)
-
-    def open_merge_window(self, event: tk.Event):
-        merge_window = tk.Toplevel()  # creates a second window
-        merge_window.title("Merge Window")
-
-    def open_verification_window(self, event: tk.Event):
-        verification_window = tk.Toplevel()  # creates a second window
-        verification_window.title("Verification Window")
-
-    def open_configuration_window(self, event: tk.Event) -> None:
-        configuration_window = tk.Toplevel()  # creates a second window
-        configuration_window.title("Configuration Window")
         
+        # Title
+        title = tk.Label(
+            self,
+            text="MIDI Tools",
+            font=("Helvetica", 24, "bold"),
+            fg="white",
+            bg="#1e1e2d"
+        )
+        title.pack(pady=(20, 10))
 
+        # Subtitle
+        subtitle = tk.Label(
+            self,
+            text="Utilities for MIDI files",
+            font=("TimesNewRoman", 12),
+            fg="#b8b8d1",
+            bg="#1e1e2d"
+        )
+
+        subtitle.pack(pady=(0, 30))
+        button_frame = tk.Frame(self, bg="#1e1e2d")
+        button_frame.pack(pady=10)
+
+        self.create_menu_button(button_frame, text="Configuration", command=self.open_configuration_window).pack(pady=10)
+        self.create_menu_button(button_frame, text="Verification", command=self.open_verification_window).pack(pady=10)
+        self.create_menu_button(button_frame, text="Merge Files", command=self.open_merge_window).pack(pady=10)
