@@ -49,10 +49,11 @@ class ChannelAssignmentRow(tk.Frame):
 
 class ChannelAssignmentWindow(tk.Toplevel):
     
-    def __init__(self, master: tk.Tk) -> None:
+    def __init__(self, master: tk.Tk, bound_var: dict[str, set[int]]) -> None:
         '''A Tkinter window handling the assignement of MIDI channels on tesla coils
 
         :param tkinter.Tk master: The window's parent
+        :param dict[str, set[int]] bound_var: A mutable variable bound to the class that is updated when the window is closed
         '''
         super().__init__(master)
         self.title('MIDI Channel Assignment')
@@ -61,6 +62,7 @@ class ChannelAssignmentWindow(tk.Toplevel):
             0: set(), 1: set(), 2: set()
         }
         self.rows: list[ChannelAssignmentRow] = []
+        self.bound_var = bound_var
 
         self.create_widgets()
         self.grab_set()
@@ -102,4 +104,5 @@ class ChannelAssignmentWindow(tk.Toplevel):
     def close(self, event: tk.Event) -> None:
         '''Closes the window
         '''
+        self.bound_var = self.assignments
         self.destroy()
