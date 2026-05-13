@@ -9,14 +9,34 @@ class VerificationWindow(tk.Tk):
         super().__init__()
         self.geometry("450x300")
         self.title("Verification Window")
+        self.configure(bg="#1e1e2f")
+        self.create_widgets()
 
     def create_widgets(self) -> None:
         btn_file=tk.Button(self, text="Select file", command=self.select_file)
-        btn_file.grid(row=0, column=0, columnspan=2)
+        btn_file.pack()
         
-        tk.Label(self, text="file chosen").grid(row=1, column=1)
+        tk.Label(self, text="file chosen").pack()
         self.name_file=tk.Label(self, text="")
-        self.name_file.grid(row=2, column=1)
+        self.name_file.pack()
+
+        btn_channel=tk.Button(self, text='assign channel')
+        btn_channel.bind('<Button-1>', self.assign_channels)
+        btn_channel.pack()
+        
+        btn_ver=tk.Button(self, text='verify')
+        btn_ver.bind('<Button-1>', self.verify)
+        btn_ver.pack()
+
+        # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
+        canvas = tk.Canvas(self)
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=canvas.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        canvas.configure(yscrollcommand=scrollbar.set)
+        self.list_frame = tk.Frame(canvas)
+        canvas.create_window((0, 0), window=self.list_frame, anchor=tk.N, width=620)
+        self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def select_file(self, event: tk.Event) -> None:
         filetypes = (('midi files', '*.mid *.midi'))
@@ -35,25 +55,33 @@ class VerificationWindow(tk.Tk):
 class Message(tk.Frame):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
-        pass
+        super().__init__()
+        self.verif_wnd=master
+        self.text=text
+        self.bg_color = None
+        self.label=tk.Label(text=self.text)
+        self.label.pack(fill='both')
 
 
 
 class SuccessMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
-        pass
+        super().__init__(master, text)
+        self.label.config(bg='green')
 
 
 
 class ErrorMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
-        pass
+        super().__init__(master,text)
+        self.label.config(bg='red')
 
 
 
 class WarningMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
-        pass
+        super().__init__(master,text)
+        self.label.config(bg='orange')

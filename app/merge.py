@@ -7,6 +7,11 @@ from scripts.midi_manager import MidiManager
 class FileListElement(tk.Frame):
 
     def __init__(self, master: tk.Tk, file_path: str) -> None:
+        '''Tkinter widget representing a file
+
+        :param tkinter.Tk master: The widget's parent
+        :param str file_path: The widget's associated file
+        '''
         super().__init__(master)
         self.file_path = file_path
         self.filename = file_path.split('/')[-1]
@@ -32,6 +37,8 @@ class FileListElement(tk.Frame):
 class MergeWindow(tk.Tk):
 
     def __init__(self):
+        '''A Tkinter window handling the graphical interface part of merging MIDI files
+        '''
         super().__init__()
         self.title('Midi File Merging')
         self.geometry('640x320')
@@ -40,7 +47,8 @@ class MergeWindow(tk.Tk):
         self.create_widgets()
 
     def create_widgets(self):
-        
+        '''Creates and places all the window's widgets
+        '''
         add_file_btn = tk.Button(self, text='Add File')
         add_file_btn.bind('<Button-1>', self.add_file)
         add_file_btn.pack(fill=tk.X)
@@ -60,6 +68,10 @@ class MergeWindow(tk.Tk):
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def add_file(self, event: tk.Event) -> None:
+        '''Asks the user to choose files to add to the list
+
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         filenames = fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
 
         if len(filenames) != 0:
@@ -86,23 +98,43 @@ class MergeWindow(tk.Tk):
             self.file_widgets[0].move_up_btn.config(state='disabled')
 
     def remove_file(self, event: tk.Event) -> None:
+        '''Removes a given file from the list
+        This method must be called by children of a FileListElement widget
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
         self.file_widgets.remove(obj)
         obj.destroy()
 
     def move_up(self, event: tk.Event) -> None:
+        '''Moves a given file upwards in the list
+        This method must be called by children of a FileListElement widget
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
         i = self.file_widgets.index(obj)
         if i > 0 and len(self.file_widgets) >= 2:
             self.swap_files(i-1, i)
 
     def move_down(self, event: tk.Event) -> None:
+        '''Moves a given file downwards in the list
+        This method must be called by children of a FileListElement widget
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         obj: FileListElement = event.widget.master # Get the FileListElement object that triggered the event
         i = self.file_widgets.index(obj)
         if i < len(self.file_widgets)-1 and len(self.file_widgets) >= 2:
             self.swap_files(i, i+1)
 
     def swap_files(self, index1: int, index2: int) -> None:
+        '''Swaps two files in the list, referenced by their indices
+        
+        :param int index1: The index of the first element in the list
+        :param int index2: The index of the second element in the list
+        '''
         # Invert the two elements in the list
         self.file_widgets[index1], self.file_widgets[index2] = self.file_widgets[index2], self.file_widgets[index1]
 
@@ -119,6 +151,10 @@ class MergeWindow(tk.Tk):
             elif i == len(self.file_widgets)-1: obj.move_down_btn.config(state='disabled')
 
     def merge(self, event: tk.Event) -> None:
+        '''Asks the user for a save location and merges all the files in the list in order
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         # Show an error if there are not enough file to merge
         if len(self.file_widgets) <= 1:
             mb.showerror('Error', 'Please add at least two files before merging.')
