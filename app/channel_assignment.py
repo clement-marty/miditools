@@ -79,9 +79,9 @@ class ChannelAssignmentWindow(tk.Toplevel):
         column_labels_frame.pack(fill=tk.X)
 
         self.rows = [
-            ChannelAssignmentRow(self, 0, 'Genepi'),
-            ChannelAssignmentRow(self, 1, 'Posipi'),
-            ChannelAssignmentRow(self, 2, 'Negapi')
+            ChannelAssignmentRow(self, 0, 'Posipi'),
+            ChannelAssignmentRow(self, 1, 'Negapi'),
+            ChannelAssignmentRow(self, 2, 'Genepi')
         ]
         for row in self.rows:
             row.pack(fill=tk.X)
