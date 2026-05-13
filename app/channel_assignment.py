@@ -65,6 +65,7 @@ class ChannelAssignmentWindow(tk.Toplevel):
         self.bound_var = bound_var
 
         self.create_widgets()
+        self.wait_visibility()
         self.grab_set()
 
     def create_widgets(self) -> None:
@@ -78,9 +79,9 @@ class ChannelAssignmentWindow(tk.Toplevel):
         column_labels_frame.pack(fill=tk.X)
 
         self.rows = [
-            ChannelAssignmentRow(self, 0, 'Genepi'),
-            ChannelAssignmentRow(self, 1, 'Posipi'),
-            ChannelAssignmentRow(self, 2, 'Negapi')
+            ChannelAssignmentRow(self, 0, 'Posipi'),
+            ChannelAssignmentRow(self, 1, 'Negapi'),
+            ChannelAssignmentRow(self, 2, 'Genepi')
         ]
         for row in self.rows:
             row.pack(fill=tk.X)
