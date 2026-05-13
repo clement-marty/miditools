@@ -104,5 +104,6 @@ class ChannelAssignmentWindow(tk.Toplevel):
     def close(self, event: tk.Event) -> None:
         '''Closes the window
         '''
-        self.bound_var = self.assignments
+        for k, v in self.assignments.items():
+            self.bound_var[k] = v
         self.destroy()
