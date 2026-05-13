@@ -43,11 +43,14 @@ class StartWindow(tk.Tk):
         return btn
 
     def open_merge_window(self,event):
-        MergeWindow(self).mainloop()
+        self.detroy()
+        MergeWindow().mainloop()
 
     def open_verification_window(self,event):
-        VerificationWindow(self).mainloop()
+        self.destroy()
+        VerificationWindow().mainloop()
 
     def open_configuration_window(self,event):
-        ConfigurationWindow(self).mainloop()
+        self.destroy()
+        ConfigurationWindow().mainloop()
         
