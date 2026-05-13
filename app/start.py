@@ -43,5 +43,13 @@ class StartWindow(tk.Tk):
         )
 
         return btn
-            
+
+    def open_merge_window(self):
+        MergeWindow(self)
+
+    def open_verification_window(self):
+        VerificationWindow(self)
+
+    def open_configuration_window(self):
+        ConfigurationWindow(self)
         
