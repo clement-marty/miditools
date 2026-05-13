@@ -45,11 +45,11 @@ class StartWindow(tk.Tk):
         return btn
 
     def open_merge_window(self):
-        MergeWindow(self)
+        MergeWindow(self).mainloop()
 
     def open_verification_window(self):
-        VerificationWindow(self)
+        VerificationWindow(self).mainloop()
 
     def open_configuration_window(self):
-        ConfigurationWindow(self)
+        ConfigurationWindow(self).mainloop()
         
