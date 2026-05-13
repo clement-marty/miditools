@@ -1,7 +1,7 @@
 import tkinter as tk
 from scripts.midi_manager import MidiManager
 from tkinter import filedialog as fd
-
+from .channel_assignment import ChannelAssignmentWindow
 
 class VerificationWindow(tk.Tk):
 
@@ -11,22 +11,24 @@ class VerificationWindow(tk.Tk):
         self.title("Verification Window")
         self.configure(bg="#1e1e2f")
         self.create_widgets()
+        self.assignments={}
 
     def create_widgets(self) -> None:
-        btn_file=tk.Button(self, text="Select file", command=self.select_file)
-        btn_file.pack()
+        btn_file=tk.Button(self, text="Select file")
+        btn_file.bind('<Button-1>',self.select_file)
+        btn_file.pack(side=tk.TOP, fill=tk.X)
         
-        tk.Label(self, text="file chosen").pack()
-        self.name_file=tk.Label(self, text="")
-        self.name_file.pack()
+        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").pack(side=tk.TOP)
+        self.name_file=tk.Label(self, text="", fg="#fafafa", bg="#1e1e2f")
+        self.name_file.pack(side=tk.TOP)
 
         btn_channel=tk.Button(self, text='assign channel')
         btn_channel.bind('<Button-1>', self.assign_channels)
-        btn_channel.pack()
+        btn_channel.pack(side=tk.TOP, fill=tk.X)
         
         btn_ver=tk.Button(self, text='verify')
         btn_ver.bind('<Button-1>', self.verify)
-        btn_ver.pack()
+        btn_ver.pack(side=tk.TOP, fill=tk.X)
 
         # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
         canvas = tk.Canvas(self)
@@ -39,13 +41,14 @@ class VerificationWindow(tk.Tk):
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def select_file(self, event: tk.Event) -> None:
+        print(self.assignments)
         filetypes = (('midi files', '*.mid *.midi'))
         filename = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
 
         self.name_file.config(text=filename)
 
     def assign_channels(self, event: tk.Event) -> None:
-        pass
+        ChannelAssignmentWindow(self, self.assignments)
 
     def verify(self, event: tk.Event) -> None:
         pass
@@ -60,7 +63,7 @@ class Message(tk.Frame):
         self.text=text
         self.bg_color = None
         self.label=tk.Label(text=self.text)
-        self.label.pack(fill='both')
+        self.label.pack(fill=tk.BOTH)
 
 
 
