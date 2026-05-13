@@ -51,8 +51,9 @@ class VerificationWindow(tk.Tk):
         ChannelAssignmentWindow(self, self.assignments)
 
     def verify(self, event: tk.Event) -> None:
-        pass
-
+        file=self.name_file.cget("text")
+        if file!='':
+            res=MidiManager.verify(file, channel_assignments=self.assignments)
 
 
 class Message(tk.Frame):
