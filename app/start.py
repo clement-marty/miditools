@@ -6,6 +6,9 @@ from .configuration import ConfigurationWindow
 class StartWindow(tk.Tk):
 
     def __init__(self):
+        """
+        Initialising the Start window and calling function create_widgets() to create widgets
+        """
         super().__init__()
         self.title("MIDI Tools")
         self.geometry("600x450")
@@ -13,6 +16,9 @@ class StartWindow(tk.Tk):
         self.create_widgets()
 
     def create_widgets(self):
+        """
+        Creating buttons and labels to comunicate with the user
+        """
         title = tk.Label(self, text="MIDI Tools", font=("Helvetica", 24, "bold"), fg="white", bg="#1e1e2d")
         title.pack(pady=(20, 10))
 
@@ -30,6 +36,9 @@ class StartWindow(tk.Tk):
         footer.pack(side="bottom", pady=20)
 
     def create_menu_button(self, parent, text, command):
+        """
+        Function that creates a 'parent' button and then binds it with the event indicated
+        """
         btn = tk.Button(
             parent,
             text=text,
@@ -43,14 +52,35 @@ class StartWindow(tk.Tk):
         return btn
 
     def open_merge_window(self,event):
+        """
+        Function that destroys the Start window and opens Merge window when clicking on the attributed button
+        
+        Parameters:
+        self: parameters and functions that belong to class
+        event: Destroying the Start window and opening the next one when clicking the corresponding button
+        """
         self.destroy()
         MergeWindow().mainloop()
 
     def open_verification_window(self,event):
+        """
+        Function that destroys the Start window and opens Verification window when clicking the attributed button
+
+        Parameters:
+        self: parameters and functions that belong to class
+        event: Destroying the Start window and opening the next one when clicking the corresponding button
+        """
         self.destroy()
         VerificationWindow().mainloop()
 
     def open_configuration_window(self,event):
+        """
+        Function that destroys the Start window and opens Configuration window when clicking the attributed button
+        
+        Parameters: 
+        self: parameters and functions that belong to class
+        event: Destroying the Start window and opening the next one when clicking the corresponding button
+        """
         self.destroy()
         ConfigurationWindow().mainloop()
         
