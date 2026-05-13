@@ -9,6 +9,7 @@ class VerificationWindow(tk.Tk):
         super().__init__()
         self.geometry("450x300")
         self.title("Verification Window")
+        self.configure(bg="#1e1e2f")
         self.create_widgets()
 
     def create_widgets(self) -> None:
@@ -18,6 +19,14 @@ class VerificationWindow(tk.Tk):
         tk.Label(self, text="file chosen").pack()
         self.name_file=tk.Label(self, text="")
         self.name_file.pack()
+
+        btn_channel=tk.Button(self, text='assign channel')
+        btn_channel.bind('<Button-1>', self.assign_channels)
+        btn_channel.pack()
+        
+        btn_ver=tk.Button(self, text='verify')
+        btn_ver.bind('<Button-1>', self.verify)
+        btn_ver.pack()
 
         # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
         canvas = tk.Canvas(self)
