@@ -42,8 +42,7 @@ class VerificationWindow(tk.Tk):
 
     def select_file(self, event: tk.Event) -> None:
         print(self.assignments)
-        filetypes = (('midi files', '*.mid *.midi'))
-        filename = fd.askopenfilename(title='Open a file',initialdir='/',filetypes=filetypes)
+        filename=fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
 
         self.name_file.config(text=filename)
 
@@ -55,13 +54,13 @@ class VerificationWindow(tk.Tk):
         if file!='':
             res=MidiManager.verify(file, channel_assignments=self.assignments)
             for e in res[0]:
-                mess=SuccessMessage(master=self.list_frame, text='e')
+                mess=SuccessMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
             for e in res[1]:
-                mess=ErrorMessage(master=self.list_frame, text='e')
+                mess=ErrorMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
             for e in res[2]:
-                mess=WarningMessage(master=self.list_frame, text='e')
+                mess=WarningMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
 
 
