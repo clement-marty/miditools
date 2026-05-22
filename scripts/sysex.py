@@ -17,7 +17,33 @@ class SysExConfiguration:
         self.parameters = parameters
 
     def get_syfoh_commands(self) -> list[str]:
-        pass
+        '''Returns the configuration's commands in the SyFoh format
+        '''
+        commands = [
+            'set enable for mode midi-live to 1' # Default configuration command required for all midi files
+        ]
+
+        # Assign the channels
+        for coil_id, channels in self.channel_assignments.items():
+            # Channels are assigned using a decimal number obtained from a 16-digit binary number,
+            # in which the n-th digit is set to 1 if the n-th channel is assigned to the considered tesla coil.
+            # For example:
+            #   dec(5) = bin(0000 0000 0000 0101)
+            #   Here we assign the channels 0 and 2
+            chn_bin = 0
+            for chn in channels:
+                chn_bin += 2 ** chn
+            commands.append(f'set midi-coil-chns for mode midi-live and coil {coil_id} to {chn_bin}')
+
+        # Set the parameters if specified:
+        allowed_parameters = ['duty', 'ontime']
+        for p in allowed_parameters:
+            for coil_id, params in self.parameters.items():
+                value = params.get(p, None)
+                if value is not None:
+                    commands.append(f'set {p} for mode midi-live and coil {coil_id} to {value}')
+
+        return commands
 
     def get_sysex_events(self) -> list[mido.Message]:
         pass
