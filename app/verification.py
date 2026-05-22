@@ -54,14 +54,15 @@ class VerificationWindow(tk.Tk):
         if file!='':
             res=MidiManager.verify(file, channel_assignments=self.assignments)
             for e in res[0]:
-                mess=SuccessMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
-            for e in res[1]:
                 mess=ErrorMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
-            for e in res[2]:
+            for e in res[1]:
                 mess=WarningMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
+            for e in res[2]:
+                mess=SuccessMessage(master=self.list_frame, text=e)
+                mess.pack(side=tk.TOP)
+
 
 
 class Message(tk.Frame):
