@@ -2,6 +2,7 @@ import tkinter as tk
 from .channel_assignment import ChannelAssignmentWindow
 from scripts.sysex import SysExConfiguration
 from tkinter import scrolledtext
+import tkinter.messagebox as mb
 
 
 class ConfigurationWindow(tk.Tk):
@@ -27,19 +28,26 @@ class ConfigurationWindow(tk.Tk):
         lbl_t3=tk.Label(self, text='Genepi', bg="#1e1e2f", fg="#f5f5f9")
         lbl_t3.grid(row=3, column=0)
 
-        self.duty_1=tk.Entry(self)
-        self.duty_1.grid(row=1, column=1)
-        self.duty_2=tk.Entry(self)
-        self.duty_2.grid(row=2, column=1)
-        self.duty_3=tk.Entry(self)
-        self.duty_3.grid(row=3, column=1)
+        vcmd=self.register(self.verify_entry)
+        self.duty_0=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.duty_0.grid(row=1, column=1)
+        self.duty_0.insert(tk.END,'0.05')
+        self.duty_1=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.duty_1.grid(row=2, column=1)
+        self.duty_1.insert(tk.END,'0.05')
+        self.duty_2=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.duty_2.grid(row=3, column=1)
+        self.duty_2.insert(tk.END,'0.08')
 
-        self.ontime_1=tk.Entry(self)
-        self.ontime_1.grid(row=1, column=2)
-        self.ontime_2=tk.Entry(self)
-        self.ontime_2.grid(row=2, column=2)
-        self.ontime_3=tk.Entry(self)
-        self.ontime_3.grid(row=3, column=2)
+        self.ontime_0=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.ontime_0.grid(row=1, column=2)
+        self.ontime_0.insert(tk.END,'40')
+        self.ontime_1=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.ontime_1.grid(row=2, column=2)
+        self.ontime_1.insert(tk.END,'40')
+        self.ontime_2=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'))
+        self.ontime_2.grid(row=3, column=2)
+        self.ontime_2.insert(tk.END,'30')
 
         btn_channel=tk.Button(self, text='Assign channel', bg="#4f46e5", fg="#f5f5f9", font=("TimesNewRoman", 10, "bold"))
         btn_channel.bind('<Button-1>', self.assign_channels)
@@ -56,4 +64,23 @@ class ConfigurationWindow(tk.Tk):
         ChannelAssignmentWindow(self, self.assignments)
 
     def generate_config(self, event: tk.Event) -> None:
-        pass
+        if self.duty_0.get()=='' or self.duty_1.get()=='' or self.duty_2.get()=='' or self.ontime_0.get()=='' or self.ontime_1.get()=='' or self.ontime_2.get()=='':
+            mb.showerror('Error', 'Please make sure that all parameters are set.')
+        else: 
+            para={0:{}, 1:{}, 2:{}}
+            para[0]={'duty':self.duty_0.get(), 'ontime':self.ontime_0.get()}
+            para[1]={'duty':self.duty_1.get(), 'ontime':self.ontime_1.get()}
+            para[2]={'duty':self.duty_2.get(), 'ontime':self.ontime_2.get()}
+            sysex=SysExConfiguration(self.assignments, para)
+            commands=sysex.get_syfoh_commands()
+            self.text_area.delete(1.0, tk.END) 
+            self.text_area.insert(tk.INSERT,'\n'.join(commands))
+
+    def verify_entry (self, value:str):
+        try:
+            if value!= '':
+                float(value)
+            return True 
+        except: 
+            return False
+
