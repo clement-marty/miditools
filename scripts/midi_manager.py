@@ -7,8 +7,7 @@ class MidiManager:
     @classmethod
     def merge(cls, file_paths : list[str], output_path : str) -> None:
         """
-        Creates a new .mid file by merging a len(file_paths) amount of midi files, by adding them one after the other while respecting the bpm changes between each other. 
-        Time signatures must be 4/4 for every file. 
+        Creates a new .mid file by merging a len(file_paths) amount of midi files, by adding them one after the other while respecting the bpm changes between each other.  
         ---
         Parameter:
         file_paths: list of strings, with the file path of each midi files
@@ -57,7 +56,8 @@ class MidiManager:
                 
             #add the used file length to the total time since the start of the output file           
             time_past += track_ticks
-
+        print(new)
+        
         new.save(output_path)
                 
 
@@ -65,4 +65,14 @@ class MidiManager:
     def verify(cls, filepath: str, channel_assignments : dict[int, set[int]]) -> tuple[list[str]]:
         pass
     
-    
+f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
+f2 = "miditools/midi_tests/125BPM_mel.mid"
+f3 = "miditools/midi_tests/148BPM_mel.mid"
+
+a = MidiManager.merge([f1, f2, f3], "miditools/midi_tests/svppp.mid")
+  
+#time added = k*numerator/bpm
+
+
+#trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
+print(4*96)
