@@ -6,6 +6,8 @@ from .channel_assignment import ChannelAssignmentWindow
 class VerificationWindow(tk.Tk):
 
     def __init__(self) -> None:
+        '''A Tkinter window handling the graphical interface part of verifying the validity of a MIDI file
+        '''
         super().__init__()
         self.geometry("390x300")
         self.title("Verification Window")
@@ -14,6 +16,8 @@ class VerificationWindow(tk.Tk):
         self.assignments={}
 
     def create_widgets(self) -> None:
+        '''Creates and places all the window's widgets
+        '''
         btn_file=tk.Button(self, text="Select file", bg="#4f46e5",fg="#f5f5f9", width=15)
         btn_file.bind('<Button-1>',self.select_file)
         btn_file.grid(row=0, column=0, columnspan=2)
@@ -41,15 +45,27 @@ class VerificationWindow(tk.Tk):
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def select_file(self, event: tk.Event) -> None:
+        '''Asks the user to choose the file to verify
+
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         print(self.assignments)
         filename=fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
 
         self.name_file.config(text=filename)
 
     def assign_channels(self, event: tk.Event) -> None:
+        '''Opens a ChannelAssignmentWindow instance
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         ChannelAssignmentWindow(self, self.assignments)
 
     def verify(self, event: tk.Event) -> None:
+        '''Verifies the validity of the chosen file
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         file=self.name_file.cget("text")
         if file!='':
             res=MidiManager.verify(file, channel_assignments=self.assignments)
@@ -68,6 +84,11 @@ class VerificationWindow(tk.Tk):
 class Message(tk.Frame):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
+        '''Tkinter widget showing a message
+
+        :param tkinter.Tk master: The widget's parent
+        :param str text: The text displayed inside the widget
+        '''
         super().__init__()
         self.verif_wnd=master
         self.text=text
@@ -80,6 +101,11 @@ class Message(tk.Frame):
 class SuccessMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
+        '''Tkinter widget showing a success message
+
+        :param tkinter.Tk master: The widget's parent
+        :param str text: The text displayed inside the widget
+        '''
         super().__init__(master, text)
         self.label.config(bg='green')
 
@@ -88,6 +114,11 @@ class SuccessMessage(Message):
 class ErrorMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
+        '''Tkinter widget showing an error message
+
+        :param tkinter.Tk master: The widget's parent
+        :param str text: The text displayed inside the widget
+        '''
         super().__init__(master,text)
         self.label.config(bg='red')
 
@@ -96,5 +127,10 @@ class ErrorMessage(Message):
 class WarningMessage(Message):
 
     def __init__(self, master: tk.Tk, text: str) -> None:
+        '''Tkinter widget showing a warning message
+
+        :param tkinter.Tk master: The widget's parent
+        :param str text: The text displayed inside the widget
+        '''
         super().__init__(master,text)
         self.label.config(bg='orange')
