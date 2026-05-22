@@ -7,32 +7,32 @@ class VerificationWindow(tk.Tk):
 
     def __init__(self) -> None:
         super().__init__()
-        self.geometry("450x300")
+        self.geometry("390x300")
         self.title("Verification Window")
         self.configure(bg="#1e1e2f")
         self.create_widgets()
         self.assignments={}
 
     def create_widgets(self) -> None:
-        btn_file=tk.Button(self, text="Select file")
+        btn_file=tk.Button(self, text="Select file", bg="#4f46e5",fg="#f5f5f9", width=15)
         btn_file.bind('<Button-1>',self.select_file)
-        btn_file.pack(side=tk.TOP, fill=tk.X)
+        btn_file.grid(row=0, column=0, columnspan=2)
         
-        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").pack(side=tk.TOP)
+        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").grid(row=1,column=0)
         self.name_file=tk.Label(self, text="", fg="#fafafa", bg="#1e1e2f")
-        self.name_file.pack(side=tk.TOP)
+        self.name_file.grid(row=1,column=1)
 
-        btn_channel=tk.Button(self, text='assign channel')
+        btn_channel=tk.Button(self, text='assign channel', bg="#4f46e5",fg="#f5f5f9", width=15)
         btn_channel.bind('<Button-1>', self.assign_channels)
-        btn_channel.pack(side=tk.TOP, fill=tk.X)
+        btn_channel.grid(row=2,column=0)
         
-        btn_ver=tk.Button(self, text='verify')
+        btn_ver=tk.Button(self, text='verify', bg="#4f46e5",fg="#f5f5f9", width=15)
         btn_ver.bind('<Button-1>', self.verify)
-        btn_ver.pack(side=tk.TOP, fill=tk.X)
+        btn_ver.grid(row=2,column=1)
 
         # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
-        canvas = tk.Canvas(self)
-        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        canvas = tk.Canvas(self, bg="#1e1e2f")
+        canvas.grid(row=3, column=0, columnspan=2)
         scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=canvas.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         canvas.configure(yscrollcommand=scrollbar.set)
