@@ -57,6 +57,7 @@ class MidiManager:
             #add the used file length to the total time since the start of the output file           
             time_past += track_ticks
         print(new)
+        
         new.save(output_path)
                 
 
