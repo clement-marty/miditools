@@ -8,6 +8,8 @@ import tkinter.messagebox as mb
 class ConfigurationWindow(tk.Tk):
 
     def __init__(self) -> None:
+        '''A Tkinter window handling the graphical interface part of verifying the validity of a MIDI file
+        '''
         super().__init__()
         self.geometry("450x300")
         self.title("Configuration Window")
@@ -16,6 +18,8 @@ class ConfigurationWindow(tk.Tk):
         self.assignments={}
 
     def create_widgets(self) -> None:
+        '''Creates and places all the window's widgets
+        '''
         lbl_duty=tk.Label(self, text='Duty', bg="#1e1e2f", fg="#f5f5f9")
         lbl_duty.grid(row=0, column=1)
         lbl_ontime=tk.Label(self, text='On Time', bg="#1e1e2f", fg="#f5f5f9")
@@ -61,9 +65,17 @@ class ConfigurationWindow(tk.Tk):
         self.text_area.grid(row=5, column=0, columnspan=3)
 
     def assign_channels(self, event: tk.Event) -> None:
+        '''Opens a ChannelAssignmentWindow instance
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         ChannelAssignmentWindow(self, self.assignments)
 
     def generate_config(self, event: tk.Event) -> None:
+        '''Generate the configuration associated to the parameters chosen 
+        
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         if self.duty_0.get()=='' or self.duty_1.get()=='' or self.duty_2.get()=='' or self.ontime_0.get()=='' or self.ontime_1.get()=='' or self.ontime_2.get()=='':
             mb.showerror('Error', 'Please make sure that all parameters are set.')
         else: 
@@ -77,6 +89,10 @@ class ConfigurationWindow(tk.Tk):
             self.text_area.insert(tk.INSERT,'\n'.join(commands))
 
     def verify_entry (self, value:str):
+        '''Verify that the value chosen by the user is a number 
+        
+        :param float value : The value that the user want to enter
+        '''
         try:
             if value!= '':
                 float(value)
