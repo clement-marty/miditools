@@ -2,6 +2,7 @@ import tkinter as tk
 from scripts.midi_manager import MidiManager
 from tkinter import filedialog as fd
 from .channel_assignment import ChannelAssignmentWindow
+import tkinter.messagebox as mb
 
 class VerificationWindow(tk.Tk):
 
@@ -49,7 +50,6 @@ class VerificationWindow(tk.Tk):
 
         :param tkinter.Event event: The event that triggered the function's execution
         '''
-        print(self.assignments)
         filename=fd.askopenfilenames(filetypes=[('Midi Files', '*.mid *.midi')])
 
         self.name_file.config(text=filename)
@@ -78,6 +78,8 @@ class VerificationWindow(tk.Tk):
             for e in res[2]:
                 mess=SuccessMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP)
+        else : 
+            mb.showerror('Error', 'Please select a file.')
 
 
 
