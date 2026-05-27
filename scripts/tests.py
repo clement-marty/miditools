@@ -1,20 +1,82 @@
-import unittest
 import mido as md
+import os
 from pathlib import Path
-from .midi_manager import MidiManager 
+from scripts.midi_manager import MidiManager
 
-class Test:
+def get_messages(filepath: str) -> list[tuple]:
+    """
+    Returns all MIDI messages with their absolute time.
+    """
+    midi_file = md.MidiFile(filepath)
+    messages = []
+    for track_index, track in enumerate(midi_file.tracks):
+        absolute_time = 0
+        for message in track:
+            absolute_time += message.time
+            if message.type != 'end_of_track':
+                midi_message = (track_index, absolute_time, message.type,  getattr(message, 'note', None), getattr(message, 'velocity', None), getattr(message, 'channel', None))
+                messages.append(midi_message)
+    return messages
 
-    def __init__(cls, file_paths : list[str], output_path : str):
-        """
-        Initialising fuction that defines the variables used in the class
-        """
-        self.coherent_merge = False
-       
-    def verif(coherent_merge):
-        """
-        The function that verifies if the merging of the chosen files was made correctly
-        """
-        mid1 = md.MidiFile('a.mid')
-        mid2 = md.MidiFile('125BPM_mel.mid')
-        """ using function merge and by calculating the tempo -- knowing what we are supposed to obtain -- verify if the two match"""
+
+def compare_files(file_1: str, file_2: str):
+    """
+    Compares two MIDI files. Returns boolean as a result
+    """
+    messages_1 = get_messages(file_1)
+    messages_2 = get_messages(file_2)
+    same = True
+    if len(messages_1) != len(messages_2):
+        print('The files do not contain the same number of messages.')
+        same = False
+    else:
+        for i in range(len(messages_1)):
+            if messages_1[i] != messages_2[i]:
+                print(f'Difference found at message {i}')
+                print('Generated file:')
+                print(messages_1[i])
+                print('Reference file:')
+                print(messages_2[i])
+                same = False
+    return same
+
+
+def print_timeline(filepath: str) -> None:
+    """
+    Displays all MIDI messages with their time.
+    """
+    midi_file = md.MidiFile(filepath)
+    print(f'\nTimeline of {filepath}\n')
+    for track_index, track in enumerate(midi_file.tracks):
+        print(f'Track {track_index}')
+        absolute_time = 0
+        for message in track:
+            absolute_time += message.time
+            if message.type != 'end_of_track':
+                print(absolute_time, message)
+        print()
+
+
+def test_merge(input_files: list[str], generated_file: str, reference_file: str) -> None:
+    """
+    Tests the merge function.
+    """
+    MidiManager.merge(input_files, generated_file)
+    result = compare_files(generated_file, reference_file)
+    print('\nTest result:')
+    if result:
+        print('SUCCESS')
+    else:
+      print('ERROR')
+
+    print_timeline(generated_file)
+    print_timeline(reference_file)
+
+
+if __name__ == '__main__':
+
+    input_files = ['miditools/midi_tests/125BPM_mel.mid','miditools/midi_tests/148BPM_mel.mid', 'miditools/midi_tests/159BPM_Beethoven.mid']
+    generated_file = 'miditools/midi_tests/generated.mid'
+    reference_file = 'miditools/midi_tests/reference.mid'
+
+    test_merge(input_files, generated_file, reference_file)
