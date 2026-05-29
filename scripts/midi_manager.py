@@ -28,18 +28,19 @@ class MidiManager:
             
             temp = md.MidiFile(file_paths[i])
             temp_tempo = temp.ticks_per_beat
-            
             #Get the ratio between the current and the tempo just before to allow bpm changes
             tempo_ratio = last_tempo/temp_tempo
             #set the tempo just before to the current one (used in the next loop iteration)
             last_tempo = temp_tempo
-            
+            time_sig = (temp.tracks[0][1].numerator, temp.tracks[0][1].denominator)
+
             
             for track in temp.tracks:
                 temp_track = md.MidiTrack()
-                
+                temp_time = 0
                 #get the length of the current midi file
                 track_ticks = sum(msg.time for msg in track)   
+                time2add = time_sig[1]*temp_tempo-track_ticks%(time_sig[1]*temp_tempo)              
                 first = True
                 for i in range(len(track)-1):
                     #change the length of each note to appropriate one depending on the bpm 
@@ -52,8 +53,16 @@ class MidiManager:
                         first = False
                         
                     temp_track.append(temp_msg)
-                
-                #if the last note 
+                    
+                #if last note does not end at the end of a bar, we lengthen it
+                if track_ticks > 0 & time2add<time_sig[1]*temp_tempo:
+                    print(track[i].time)
+                    print("v")
+                    print(time2add)
+                    temp_time = int(round((track[i].time+time2add)*tempo_ratio))
+                    temp_msg = track[i].copy(time=temp_time)
+                    temp_track.append(temp_msg)
+                    
                 
                 new.tracks.append(temp_track)
                 
@@ -68,11 +77,11 @@ class MidiManager:
     def verify(cls, filepath: str, channel_assignments : dict[int, set[int]]) -> tuple[list[str]]:
         pass
     
-f1 = "miditools/midi_tests/134BPM_34_MEL.mid"
-f2 = "miditools/midi_tests/125BPM_mel.mid"
-f3 = "miditools/midi_tests/148BPM_mel.mid"
+f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
+f2 = "miditools/midi_tests/148BPM_mel.mid"
+f3 = "miditools/midi_tests/148BPM_chords.mid"
 
-a = MidiManager.merge([f1, f2, f3], "miditools/midi_tests/svppp.mid")
+a = MidiManager.merge([f1, f2], "miditools/midi_tests/svppp.mid")
   
 #time added = k*numerator/bpm
 
