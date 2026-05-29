@@ -1,11 +1,17 @@
 import mido as md
 import os
 from pathlib import Path
-from scripts.midi_manager import MidiManager
+from .midi_manager import MidiManager
 
 def get_messages(filepath: str) -> list[tuple]:
     """
     Returns all MIDI messages with their absolute time.
+
+    Parameters:
+     - filepath: string,  which contains the path of the midi file
+
+    Returns: 
+     - messages: list of tuples, which contains the discrition parameters of midi file 
     """
     midi_file = md.MidiFile(filepath)
     messages = []
@@ -22,6 +28,13 @@ def get_messages(filepath: str) -> list[tuple]:
 def compare_files(file_1: str, file_2: str):
     """
     Compares two MIDI files. Returns boolean as a result
+
+    Parameters: 
+     - file_1: string, containing the path for file 1
+     - file_2: string, containing the path for file 2
+    
+     Retuns:
+     - same: boolean, that contains the result that is due to the comparison of two files
     """
     messages_1 = get_messages(file_1)
     messages_2 = get_messages(file_2)
@@ -44,6 +57,13 @@ def compare_files(file_1: str, file_2: str):
 def print_timeline(filepath: str) -> None:
     """
     Displays all MIDI messages with their time.
+
+    Parameters:
+     - filepath: string,  which contains the path of the midi file
+
+    Returns:
+      Nothing
+      Prints the time of the midi file
     """
     midi_file = md.MidiFile(filepath)
     print(f'\nTimeline of {filepath}\n')
@@ -60,6 +80,11 @@ def print_timeline(filepath: str) -> None:
 def test_merge(input_files: list[str], generated_file: str, reference_file: str) -> None:
     """
     Tests the merge function.
+
+    Parameters:
+     - input_files: list of strings, contains the paths of the mido files to test
+     - generated_file: string, the path of generated file
+     - reference_file: string, the path of the reference file
     """
     MidiManager.merge(input_files, generated_file)
     result = compare_files(generated_file, reference_file)
