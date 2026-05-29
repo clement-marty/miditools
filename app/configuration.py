@@ -91,7 +91,7 @@ class ConfigurationWindow(tk.Tk):
     def verify_entry (self, value:str):
         '''Verify that the value chosen by the user is a number 
         
-        :param float value : The value that the user want to enter
+        :param float value : The value that the user wants to enter
         '''
         try:
             if value!= '':
