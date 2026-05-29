@@ -1,7 +1,7 @@
 import mido as md
 import os
 from pathlib import Path
-from .midi_manager import MidiManager
+from midi_manager import MidiManager
 
 def get_messages(filepath: str) -> list[tuple]:
     """
@@ -100,8 +100,7 @@ def test_merge(input_files: list[str], generated_file: str, reference_file: str)
 
 if __name__ == '__main__':
 
-    input_files = ['miditools/midi_tests/125BPM_mel.mid','miditools/midi_tests/148BPM_mel.mid', 'miditools/midi_tests/159BPM_Beethoven.mid']
-    generated_file = 'miditools/midi_tests/generated.mid'
-    reference_file = 'miditools/midi_tests/reference.mid'
-
+    input_files = ["midi_tests/125BPM_mel.mid", "midi_tests/125BPM_mel.mid"]
+    generated_file = "midi_tests/generated.mid"
+    reference_file = "midi_tests/reference.mid"
     test_merge(input_files, generated_file, reference_file)

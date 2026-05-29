@@ -65,14 +65,14 @@ class MidiManager:
     def verify(cls, filepath: str, channel_assignments : dict[int, set[int]]) -> tuple[list[str]]:
         pass
     
-f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
-f2 = "miditools/midi_tests/125BPM_mel.mid"
-f3 = "miditools/midi_tests/148BPM_mel.mid"
+# f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
+# f2 = "miditools/midi_tests/125BPM_mel.mid"
+# f3 = "miditools/midi_tests/148BPM_mel.mid"
 
-a = MidiManager.merge([f1, f2, f3], "miditools/midi_tests/svppp.mid")
+# a = MidiManager.merge([f1, f2, f3], "miditools/midi_tests/svppp.mid")
   
-#time added = k*numerator/bpm
+# #time added = k*numerator/bpm
 
 
-#trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
-print(4*96)
+# #trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
+# print(4*96)s
