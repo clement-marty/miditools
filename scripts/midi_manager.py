@@ -83,9 +83,8 @@ f3 = "miditools/midi_tests/148BPM_chords.mid"
 
 a = MidiManager.merge([f1, f2], "miditools/midi_tests/svppp.mid")
   
-#time added = k*numerator/bpm
+# #time added = k*numerator/bpm
 
 
-#trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
-print(4*96)
-print(md.bpm2tempo(159))
+# #trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
+# print(4*96)s

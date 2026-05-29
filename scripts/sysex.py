@@ -1,3 +1,5 @@
+import os
+import sys
 import mido
 
 
@@ -46,4 +48,34 @@ class SysExConfiguration:
         return commands
 
     def get_sysex_events(self) -> list[mido.Message]:
-        pass
+        '''Creates and returns the configuration's SysEx events
+        
+        :return list[mido.Message]: The list of SysEx events corresponding to the configuration
+        '''
+        commands = self.get_syfoh_commands()
+        events = []
+
+        python_path = sys.executable
+        syfoh_path = 'Syfoh/Syfoh.py'
+        tempfile_path = 'scripts/temp.txt'
+        for cmd in commands:
+
+            # Convert the textual command to a list of bytes, using the SyFoh format
+            # The -i option is used to specify the command
+            # the -m option specifies that the output must be in hexadecimal format,
+            # and the -o option specifies the temporary output file we use
+            os.system(f'{python_path} {syfoh_path} -i "{cmd}" -m HEX -o {tempfile_path}')
+            with open(tempfile_path, 'r') as f:
+                # Load the hexadecimal data from the temporary file, and convert it to a list of integers
+                # We also remove the first and last byte, which are the start and end bytes of the SysEx message,
+                #   as they are automatically added by mido when creating the message
+                hex_data = f.read().split(' ')[1:-1]
+
+                # Convert the hexadecimal data to a list of integers
+                int_data = [int(x, 16) for x in hex_data]
+
+                # Create the SysEx message and add it to the list of events
+                event = mido.Message('sysex', data=int_data)
+                events.append(event)
+
+        return events
