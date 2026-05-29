@@ -11,6 +11,7 @@ class MidiManager:
         ---
         Parameter:
         file_paths: list of strings, with the file path of each midi files
+        Output:
         output_path: string of the file path for the output midi file
         """
 
@@ -40,10 +41,10 @@ class MidiManager:
                 #get the length of the current midi file
                 track_ticks = sum(msg.time for msg in track)   
                 first = True
-                for msg in track:
+                for i in range(len(track)-1):
                     #change the length of each note to appropriate one depending on the bpm 
-                    temp_time = int(round(msg.time*tempo_ratio))
-                    temp_msg = msg.copy(time=temp_time)
+                    temp_time = int(round(track[i].time*tempo_ratio))
+                    temp_msg = track[i].copy(time=temp_time)
                     
                     #if the message is the first, the time it starts is right after the last midi file
                     if first:
@@ -51,7 +52,9 @@ class MidiManager:
                         first = False
                         
                     temp_track.append(temp_msg)
-                    
+                
+                #if the last note 
+                
                 new.tracks.append(temp_track)
                 
             #add the used file length to the total time since the start of the output file           
@@ -65,7 +68,7 @@ class MidiManager:
     def verify(cls, filepath: str, channel_assignments : dict[int, set[int]]) -> tuple[list[str]]:
         pass
     
-f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
+f1 = "miditools/midi_tests/134BPM_34_MEL.mid"
 f2 = "miditools/midi_tests/125BPM_mel.mid"
 f3 = "miditools/midi_tests/148BPM_mel.mid"
 
@@ -76,3 +79,4 @@ a = MidiManager.merge([f1, f2, f3], "miditools/midi_tests/svppp.mid")
 
 #trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
 print(4*96)
+print(md.bpm2tempo(159))
