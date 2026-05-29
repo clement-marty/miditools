@@ -10,7 +10,7 @@ class ChannelAssignmentRow(tk.Frame):
         :param int coil_id: The tesla coil's id
         :param str coil_name: The tesla coil's name
         '''
-        super().__init__(master)
+        super().__init__(master, height=30)
         self.coil_id, self.coil_name = coil_id, coil_name
         self.buttons: list[tk.Button] = []
         self.create_widgets()
@@ -18,17 +18,16 @@ class ChannelAssignmentRow(tk.Frame):
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
+        id_label = tk.Label(self, text=f'[coil_{self.coil_id}]')
+        id_label.place(relx=0, rely=0, relwidth=0.1, relheight=1)
+        name_label = tk.Label(self, text=self.coil_name)
+        name_label.place(relx=0.1, rely=0, relwidth=0.1, relheight=1)
 
-        id_label = tk.Label(self, text=f'[coil_{self.coil_id}]', width=8)
-        id_label.pack(side=tk.LEFT)
-        name_label = tk.Label(self, text=self.coil_name, width=8)
-        name_label.pack(side=tk.LEFT)
-
-        for _ in range(15, -1, -1):
-            btn = tk.Button(self, text='', width=1, height=1, bg='red', activebackground='orange')
+        for i in range(16):
+            btn = tk.Button(self, text='', bg='red', activebackground='orange')
             btn.bind('<Button-1>', self.toggle_btn_state)
-            btn.pack(side=tk.RIGHT)
-            self.buttons.insert(0, btn)
+            btn.place(relx=0.2+(i*0.05), rely=0, relwidth=0.05, relheight=1)
+            self.buttons.append(btn)
 
     def toggle_btn_state(self, event: tk.Event):
         '''Toggles a button on/off and updates the associated ChannelAssignmentWindow object
@@ -72,10 +71,10 @@ class ChannelAssignmentWindow(tk.Toplevel):
         '''Creates and places all the window's widgets
         '''
 
-        column_labels_frame = tk.Frame(self)
-        for i in range(15, -1, -1):
+        column_labels_frame = tk.Frame(self, width=600, height=30)
+        for i in range(16):
             channel_label = tk.Label(column_labels_frame, text=i, width=4)
-            channel_label.pack(side=tk.RIGHT)
+            channel_label.place(relx=0.2+(i*0.05), rely=0, relwidth=0.05, relheight=1)
         column_labels_frame.pack(fill=tk.X)
 
         self.rows = [
