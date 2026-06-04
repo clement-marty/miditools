@@ -88,14 +88,16 @@ class MidiManager:
         Output:
             results : tuple of 3 lists of strings, corresponding to errors messages, warning messages and success messages.
         """
-        
         errors = []
         warnings = []
         successes = []
+        
+        #we change the data structure to link a channel to a tesla instead
         channel_to_t_ind = {}
         for t_ind, channels in channel_assignments.items():
             for channel in channels:
                 channel_to_t_ind[channel] = t_ind
+                
         active_count = {}
         max_count = {}
         active_notes = {}
@@ -105,48 +107,33 @@ class MidiManager:
             if hasattr(msg, "channel") and msg.channel in channel_to_t_ind:
                 channel = msg.channel
                 t_ind = channel_to_t_ind[channel]
-
+                
                 if t_ind not in active_count:
                     active_count[t_ind] = 0
                     max_count[t_ind] = 0
                     active_notes[t_ind] = {}
-
+                
                 note_counts = active_notes[t_ind]
-
                 if msg.type == "note_on" and msg.velocity > 0:
                     note_counts[msg.note] = note_counts.get(msg.note, 0) + 1
                     active_count[t_ind] += 1
 
-                    max_count[t_ind] = max(
-                        max_count[t_ind],
-                        active_count[t_ind]
-                    )
+                    max_count[t_ind] = max(max_count[t_ind],active_count[t_ind])
 
-                elif msg.type == "note_off" or (
-                    msg.type == "note_on" and msg.velocity == 0
-                ):
+                elif msg.type == "note_off" or (msg.type == "note_on" and msg.velocity == 0):
                     if msg.note in note_counts:
                         note_counts[msg.note] -= 1
                         active_count[t_ind] -= 1
-
-                        if note_counts[msg.note] == 0:
-                            del note_counts[msg.note]
 
         for t_ind in sorted(channel_assignments):
             peak = max_count.get(t_ind, 0)
 
             if peak > 3:
-                errors.append(
-                    f"Error : Tesla n°{t_ind} uses {peak} simultaneous notes."
-                )
+                errors.append(f"Error : Tesla n°{t_ind} uses {peak} simultaneous notes.")
             elif peak == 3:
-                warnings.append(
-                    f"Warning : Tesla n°{t_ind} uses 3 simultaneous notes."
-                )
+                warnings.append(f"Warning : Tesla n°{t_ind} uses 3 simultaneous notes.")
             else:
-                successes.append(
-                    f"Success : Tesla n°{t_ind} uses at most {peak} simultaneous notes."
-                )
+                successes.append(f"Success : Tesla n°{t_ind} uses at most {peak} simultaneous notes.")
 
         return (errors, warnings, successes)
             
