@@ -71,13 +71,13 @@ class VerificationWindow(tk.Tk):
             res=MidiManager.verify(file, channel_assignments=self.assignments)
             for e in res[0]:
                 mess=ErrorMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
             for e in res[1]:
                 mess=WarningMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
             for e in res[2]:
                 mess=SuccessMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
         else : 
             mb.showerror('Error', 'Please select a file.')
 
@@ -91,11 +91,11 @@ class Message(tk.Frame):
         :param tkinter.Tk master: The widget's parent
         :param str text: The text displayed inside the widget
         '''
-        super().__init__()
+        super().__init__(master)
         self.verif_wnd=master
         self.text=text
         self.bg_color = None
-        self.label=tk.Label(text=self.text)
+        self.label=tk.Label(master=self, text=self.text)
         self.label.pack(fill=tk.BOTH)
 
 
