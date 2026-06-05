@@ -2,6 +2,7 @@ import mido as md
 import os
 from pathlib import Path
 
+
 class MidiManager:
 
     @classmethod
@@ -80,7 +81,10 @@ class MidiManager:
     @classmethod
     def verify(cls, filepath: str, channel_assignments : dict[int, set[int]]) -> tuple[list[str]]:
         """
-        Verifies a few constraints to allow the Telsa coils to work properly. There should be at most 4 notes at the same time for a given coil (channel)
+        Verifies a few constraints to allow the Telsa coils to work properly:
+        -There should be at most 4 notes at the same time for a given coil (channel),
+        -There should not be a note played in a channel not in parameter channel_assignments,
+        -The enveloppes used should be the ones used by the Clubelek, from id 0 to 9.
         ---
         Parameters:
             filepath : str contaning the relative path for the midi file to verify.
@@ -101,8 +105,10 @@ class MidiManager:
         active_count = {}
         max_count = {}
         active_notes = {}
+        unassigned_channel = []
+        curr_time = -1
         midi = md.MidiFile(filepath[1:-1])
-
+        print(midi.merged_track)
         for msg in midi.merged_track:
             if hasattr(msg, "channel") and msg.channel in channel_to_t_ind:
                 channel = msg.channel
@@ -124,6 +130,14 @@ class MidiManager:
                     if msg.note in note_counts:
                         note_counts[msg.note] -= 1
                         active_count[t_ind] -= 1
+            
+            # we verify if a note is played in a non assigned channel. it gives an error if that is the case
+            elif hasattr(msg, "channel") and msg.channel not in channel_to_t_ind and msg.type == "note_on" and msg.channel not in unassigned_channel: 
+                unassigned_channel.append(msg.channel)
+                
+                
+            if hasattr(msg, "program_change") and msg.program_change > 9:
+                errors.append(f"Error : Invalid enveloppe ")
 
         for t_ind in sorted(channel_assignments):
             peak = max_count.get(t_ind, 0)
@@ -134,6 +148,9 @@ class MidiManager:
                 warnings.append(f"Warning : Tesla n°{t_ind} uses 3 simultaneous notes.")
             else:
                 successes.append(f"Success : Tesla n°{t_ind} uses at most {peak} simultaneous notes.")
+        
+        for chann in unassigned_channel:
+            errors.append(f"Error : Bad channel assignment. Channel n°{chann} used when it is not assigned.")
 
         return (errors, warnings, successes)
             
@@ -144,7 +161,7 @@ class MidiManager:
 #f2 = "miditools/midi_tests/148BPM_mel.mid"
 #f3 = "miditools/midi_tests/148BPM_chords.mid"
 
-#a = MidiManager.merge([f1, f3], "miditools/midi_tests/svppp.mid")
+#a = MidiManager.merge([f1, f2], "miditools/midi_tests/svppp.mid")
 #assigmnt = dict()
 #assigmnt[1] = set([1])
 #print(MidiManager.verify(f1, assigmnt))
