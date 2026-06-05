@@ -107,7 +107,7 @@ class MidiManager:
         active_notes = {}
         unassigned_channel = []
         curr_time = -1
-        midi = md.MidiFile(filepath[1:-1])
+        midi = md.MidiFile(filepath)
         print(midi.merged_track)
         for msg in midi.merged_track:
             if hasattr(msg, "channel") and msg.channel in channel_to_t_ind:
