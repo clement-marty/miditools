@@ -10,8 +10,9 @@ class VerificationWindow(tk.Tk):
         '''A Tkinter window handling the graphical interface part of verifying the validity of a MIDI file
         '''
         super().__init__()
-        self.geometry("450x350")
         self.title("Verification Window")
+        self.geometry('640x640')
+        self.resizable(width=False, height=False)
         self.configure(bg="#1e1e2f")
         self.create_widgets()
         self.assignments={}
@@ -19,30 +20,30 @@ class VerificationWindow(tk.Tk):
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
-        btn_file=tk.Button(self, text="Select file", bg="#4f46e5",fg="#f5f5f9", width=15)
-        btn_file.bind('<Button-1>',self.select_file)
-        btn_file.place(relx=0.4, rely=0, relwidth=0.2, relheight=0.1)
-        
-        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").place(relx=0, rely=0.1, relwidth=0.2, relheight=0.1)
+        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").place(relx=0.05, rely=0.025, relwidth=0.2, relheight=0.05)
         self.name_file=tk.Label(self, text="", fg="#fafafa", bg="#1e1e2f")
-        self.name_file.place(relx=0.2, rely=0.1, relwidth=0.8, relheight=0.1)
+        self.name_file.place(relx=0.275, rely=0.025, relwidth=0.65, relheight=0.05)
 
-        btn_channel=tk.Button(self, text='assign channel', bg="#4f46e5",fg="#f5f5f9", width=15)
+        btn_file=tk.Button(self, text="Select file", bg="#4f46e5",fg="#f5f5f9")
+        btn_file.bind('<Button-1>',self.select_file)
+        btn_file.place(relx=0.05, rely=0.075, relwidth=0.9, relheight=0.05)
+
+        btn_channel=tk.Button(self, text='assign channel', bg="#4f46e5",fg="#f5f5f9")
         btn_channel.bind('<Button-1>', self.assign_channels)
-        btn_channel.place(relx=0.1, rely=0.25, relwidth=0.3, relheight=0.1)
+        btn_channel.place(relx=0.05, rely=0.15, relwidth=0.425, relheight=0.05)
         
-        btn_ver=tk.Button(self, text='verify', bg="#4f46e5",fg="#f5f5f9", width=15)
+        btn_ver=tk.Button(self, text='verify', bg="#4f46e5",fg="#f5f5f9")
         btn_ver.bind('<Button-1>', self.verify)
-        btn_ver.place(relx=0.6, rely=0.25, relwidth=0.3, relheight=0.1)
+        btn_ver.place(relx=0.525, rely=0.15, relwidth=0.425, relheight=0.05)
 
-        # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
+        # Creates a tk.Frame object that can be scrolled vertically using the scrollbar
         canvas = tk.Canvas(self, bg="#1e1e2f")
-        canvas.place(relx=0, rely=0.4, relwidth=0.95, relheight=0.6)
+        canvas.place(relx=0, rely=0.225, relwidth=0.975, relheight=0.775)
         scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=canvas.yview)
-        scrollbar.place(relx=0.95, rely=0.4, relwidth=0.05, relheight=0.6)
+        scrollbar.place(relx=0.975, rely=0.225, relwidth=0.025, relheight=0.775)
         canvas.configure(yscrollcommand=scrollbar.set)
         self.list_frame = tk.Frame(canvas)
-        canvas.create_window((0, 0), window=self.list_frame, anchor=tk.N, width=620)
+        canvas.create_window((0, 0), window=self.list_frame, anchor=tk.N, width=450)
         self.list_frame.bind('<Configure>', lambda event: canvas.configure(scrollregion=canvas.bbox(tk.ALL)))
 
     def select_file(self, event: tk.Event) -> None:
@@ -69,15 +70,21 @@ class VerificationWindow(tk.Tk):
         file=self.name_file.cget("text")
         if file!='':
             res=MidiManager.verify(file, channel_assignments=self.assignments)
+
+            # Remove previous messages
+            for widget in self.list_frame.winfo_children():
+                widget.destroy()
+
+            # Add new messages
             for e in res[0]:
                 mess=ErrorMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
             for e in res[1]:
                 mess=WarningMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
             for e in res[2]:
                 mess=SuccessMessage(master=self.list_frame, text=e)
-                mess.pack(side=tk.TOP)
+                mess.pack(side=tk.TOP, fill=tk.X)
         else : 
             mb.showerror('Error', 'Please select a file.')
 
@@ -91,11 +98,11 @@ class Message(tk.Frame):
         :param tkinter.Tk master: The widget's parent
         :param str text: The text displayed inside the widget
         '''
-        super().__init__()
+        super().__init__(master)
         self.verif_wnd=master
         self.text=text
         self.bg_color = None
-        self.label=tk.Label(text=self.text)
+        self.label=tk.Label(master=self, text=self.text)
         self.label.pack(fill=tk.BOTH)
 
 
