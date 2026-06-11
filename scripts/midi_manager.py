@@ -26,7 +26,6 @@ class MidiManager:
         
         
         for i in range(len(file_paths)): 
-            
             temp = md.MidiFile(file_paths[i])
             temp_tempo = temp.ticks_per_beat
             #Get the ratio between the current and the tempo just before to allow bpm changes
@@ -35,7 +34,6 @@ class MidiManager:
             last_tempo = temp_tempo
             time_sig = (temp.tracks[0][1].numerator, temp.tracks[0][1].denominator)
 
-            
             for track in temp.tracks:
                 bar_len = time_sig[0]*temp_tempo*(4/time_sig[1])
                 temp_track = md.MidiTrack()
@@ -44,37 +42,21 @@ class MidiManager:
                 track_ticks = sum(msg.time for msg in track)   
                 time2add = time_sig[1]*temp_tempo-track_ticks%(time_sig[1]*temp_tempo)              
                 first = True
+                
                 for i in range(len(track)-1):
                     #change the length of each note to appropriate one depending on the bpm 
                     temp_time = int(round(track[i].time*tempo_ratio))
-                    temp_msg = track[i].copy(time=temp_time)
-                    
+                    temp_msg = track[i].copy(time=temp_time)    
                     #if the message is the first, the time it starts is right after the last midi file
                     if first:
                         temp_msg.time += time_past
-                        first = False
-                        
-                    temp_track.append(temp_msg)
-                    
-                #if last note does not end at the end of a bar, we lengthen it
-                
-                
-                #if track_ticks > 0 & time2add<time_sig[1]*temp_tempo:
-                #    print(track[i].time)
-                #    print("v")
-                #    print(time2add)
-                #    temp_time = int(round((track[i].time+time2add)*tempo_ratio))
-                #    temp_msg = track[i].copy(time=temp_time)
-                #    temp_track.append(temp_msg)
-                    
-                
+                        first = False                     
+                    temp_track.append(temp_msg)                  
                 new.tracks.append(temp_track)
                 
             #add the used file length to the total time since the start of the output file           
             time_past += track_ticks
             time_past = int(((time_past+bar_len-1)//bar_len)*bar_len) # adds empty space between 2 files if the first one does not end at a bar. 
-        print(new)
-        
         new.save(output_path)
                 
 
@@ -108,7 +90,9 @@ class MidiManager:
         unassigned_channel = []
         curr_time = -1
         midi = md.MidiFile(filepath[1:-1])
+        
         for msg in midi.merged_track:
+            #if the current message has a channel of a tesla we verify the number of notes it has
             if hasattr(msg, "channel") and msg.channel in channel_to_t_ind:
                 channel = msg.channel
                 t_ind = channel_to_t_ind[channel]
@@ -134,10 +118,11 @@ class MidiManager:
             elif hasattr(msg, "channel") and msg.channel not in channel_to_t_ind and msg.type == "note_on" and msg.channel not in unassigned_channel: 
                 unassigned_channel.append(msg.channel)
                 
-                
+            # we give an error if the enveloppe is not playable by the teslas
             if hasattr(msg, "program") and msg.program > 9:
                 errors.append(f"Error : Enveloppe chosen n°{msg.program} is invalid.")
 
+        # we look for the highest number of notes in the whole file for each tesla
         for t_ind in sorted(channel_assignments):
             peak = max_count.get(t_ind, 0)
 
@@ -154,14 +139,3 @@ class MidiManager:
         return (errors, warnings, successes)
             
 
-
-   
-#f1 = "midi_tests/tst.mid"
-#f2 = "midi_tests/148BPM_mel.mid"
-#f3 = "miditools/midi_tests/148BPM_chords.mid"
-
-#a = MidiManager.merge([f1, f2], "miditools/midi_tests/svppp.mid")
-#assigmnt = dict()
-#assigmnt[1] = set([1])
-#print(MidiManager.verify(f1, assigmnt))
-# #time added = k*numerator/bpm
