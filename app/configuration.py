@@ -33,24 +33,25 @@ class ConfigurationWindow(tk.Tk):
         lbl_t3=tk.Label(self, text='[coil 2]\tGenepi', anchor=tk.W, bg="#1e1e2f", fg="#f5f5f9")
         lbl_t3.place(relx=0.05, rely=0.15, relwidth=0.3, relheight=0.05)
 
-        vcmd=self.register(self.verify_entry)
-        self.duty_0=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        duty_vcmd=self.register(self.verify_duty_entry)
+        self.duty_0=tk.Entry(self, validate='all', validatecommand=(duty_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.duty_0.place(relx=0.35, rely=0.05, relwidth=0.3, relheight=0.05)
         self.duty_0.insert(tk.END,'0.05')
-        self.duty_1=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        self.duty_1=tk.Entry(self, validate='all', validatecommand=(duty_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.duty_1.place(relx=0.35, rely=0.1, relwidth=0.3, relheight=0.05)
         self.duty_1.insert(tk.END,'0.05')
-        self.duty_2=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        self.duty_2=tk.Entry(self, validate='all', validatecommand=(duty_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.duty_2.place(relx=0.35, rely=0.15, relwidth=0.3, relheight=0.05)
         self.duty_2.insert(tk.END,'0.08')
 
-        self.ontime_0=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        ontime_vcmd=self.register(self.verify_ontime_entry)
+        self.ontime_0=tk.Entry(self, validate='all', validatecommand=(ontime_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.ontime_0.place(relx=0.65, rely=0.05, relwidth=0.3, relheight=0.05)
         self.ontime_0.insert(tk.END,'40')
-        self.ontime_1=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        self.ontime_1=tk.Entry(self, validate='all', validatecommand=(ontime_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.ontime_1.place(relx=0.65, rely=0.1, relwidth=0.3, relheight=0.05)
         self.ontime_1.insert(tk.END,'40')
-        self.ontime_2=tk.Entry(self, validate='all', validatecommand=(vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
+        self.ontime_2=tk.Entry(self, validate='all', validatecommand=(ontime_vcmd,'%P'), bg="#2b2b44", fg="#f5f5f9")
         self.ontime_2.place(relx=0.65, rely=0.15, relwidth=0.3, relheight=0.05)
         self.ontime_2.insert(tk.END,'30')
 
@@ -89,15 +90,32 @@ class ConfigurationWindow(tk.Tk):
             self.text_area.delete(1.0, tk.END) 
             self.text_area.insert(tk.INSERT,'\n'.join(commands))
 
-    def verify_entry (self, value:str):
-        '''Verify that the value chosen by the user is a number 
+    def verify_duty_entry(self, value: str) -> bool:
+        '''Verify that the duty value entered by the user is correct
+        It must be a float in the range [0, 1)
         
-        :param float value : The value that the user wants to enter
+        :param str value: The value that the user wants to enter
+        :return bool: True if the value is correct, False otherwise
         '''
         try:
-            if value!= '':
-                float(value)
-            return True 
-        except: 
+            if value != '':
+                duty = float(value)
+                return 0 <= duty < 1
+            else: return True
+        except: # float(value) raises an exception if the value is not a number 
             return False
-
+        
+    def verify_ontime_entry(self, value: str) -> bool:
+        '''Verify that the ontime value entered by the user is correct
+        It must be a strictly positive integer
+        
+        :param str value: The value that the user wants to enter
+        :return bool: True if the value is correct, False otherwise
+        '''
+        try:
+            if value != '':
+                ontime = int(value)
+                return ontime > 0
+            else: return True
+        except: # int(value) raises an exception if the value is not an integer 
+            return False
