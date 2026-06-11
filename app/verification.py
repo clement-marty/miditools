@@ -69,6 +69,12 @@ class VerificationWindow(tk.Tk):
         file=self.name_file.cget("text")
         if file!='':
             res=MidiManager.verify(file, channel_assignments=self.assignments)
+
+            # Remove previous messages
+            for widget in self.list_frame.winfo_children():
+                widget.destroy()
+
+            # Add new messages
             for e in res[0]:
                 mess=ErrorMessage(master=self.list_frame, text=e)
                 mess.pack(side=tk.TOP, fill=tk.X)
