@@ -13,6 +13,7 @@ class FileListElement(tk.Frame):
         :param str file_path: The widget's associated file
         '''
         super().__init__(master)
+        self.configure(bg="#1e1e2f")
         self.file_path = file_path
         self.filename = file_path.split('/')[-1]
         btn_width = 6
@@ -21,12 +22,12 @@ class FileListElement(tk.Frame):
             highlightthickness=1
         )
 
-        filename_label = tk.Label(self, text=self.filename)
+        filename_label = tk.Label(self, text=self.filename, bg="#1e1e2f", fg="#f5f5f9")
         filename_label.pack(side=tk.LEFT, fill=tk.X, padx=20)
 
-        self.move_up_btn = tk.Button(self, text='Up', width=btn_width)
-        self.move_down_btn = tk.Button(self, text='Down', width=btn_width)
-        self.remove_btn = tk.Button(self, text='Remove', width=btn_width)
+        self.move_up_btn = tk.Button(self, text='Up', width=btn_width, bg="#4f46e5", fg="#f5f5f9")
+        self.move_down_btn = tk.Button(self, text='Down', width=btn_width, bg="#4f46e5", fg="#f5f5f9")
+        self.remove_btn = tk.Button(self, text='Remove', width=btn_width, bg="#4f46e5", fg="#f5f5f9")
 
         self.remove_btn.pack(side=tk.RIGHT)
         self.move_down_btn.pack(side=tk.RIGHT)
@@ -41,27 +42,28 @@ class MergeWindow(tk.Tk):
         '''
         super().__init__()
         self.title('Midi File Merging')
+        self.configure(bg="#1e1e2f")
         self.geometry('640x320')
-        self.resizable(width=False, height=True)
+        self.resizable(width=False, height=False)
         self.file_widgets: list[FileListElement] = []
         self.create_widgets()
 
     def create_widgets(self):
         '''Creates and places all the window's widgets
         '''
-        add_file_btn = tk.Button(self, text='Add File')
+        add_file_btn = tk.Button(self, text='Add File', bg="#4f46e5",fg="#f5f5f9")
         add_file_btn.bind('<Button-1>', self.add_file)
-        add_file_btn.pack(fill=tk.X)
+        add_file_btn.place(relx=0.05, rely=0.025, relwidth=0.425, relheight=0.1)
 
-        self.merge_btn = tk.Button(self, text='Merge')
+        self.merge_btn = tk.Button(self, text='Merge', bg="#4f46e5",fg="#f5f5f9")
         self.merge_btn.bind('<Button-1>', self.merge)
-        self.merge_btn.pack(side=tk.BOTTOM, fill=tk.X)
+        self.merge_btn.place(relx=0.525, rely=0.025, relwidth=0.425, relheight=0.1)
 
-        # Creates a tk.Frame object that can be scrolled vetically using the scrollbar
-        canvas = tk.Canvas(self)
-        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        # Creates a tk.Frame object that can be scrolled vertically using the scrollbar
+        canvas = tk.Canvas(self, bg="#1e1e2f")
+        canvas.place(relx=0, rely=0.15, relwidth=0.975, relheight=0.85)
         scrollbar = tk.Scrollbar(self, orient=tk.VERTICAL, command=canvas.yview)
-        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        scrollbar.place(relx=0.975, rely=0.15, relwidth=0.025, relheight=0.85)
         canvas.configure(yscrollcommand=scrollbar.set)
         self.list_frame = tk.Frame(canvas)
         canvas.create_window((0, 0), window=self.list_frame, anchor=tk.N, width=620)
