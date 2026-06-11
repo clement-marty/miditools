@@ -6,9 +6,8 @@ from .configuration import ConfigurationWindow
 class StartWindow(tk.Tk):
 
     def __init__(self):
-        """
-        Initialising the Start window and calling function create_widgets() to create widgets
-        """
+        '''Initialising the Start window and calling function create_widgets() to create widgets
+        '''
         super().__init__()
         self.title("MIDI Tools")
         self.geometry("600x450")
@@ -16,9 +15,8 @@ class StartWindow(tk.Tk):
         self.create_widgets()
 
     def create_widgets(self):
-        """
-        Creating buttons and labels to comunicate with the user
-        """
+        '''Creating buttons and labels to comunicate with the user
+        '''
         title = tk.Label(self, text="MIDI Tools", font=("Helvetica", 24, "bold"), fg="white", bg="#1e1e2d")
         title.pack(pady=(20, 10))
 
@@ -36,9 +34,8 @@ class StartWindow(tk.Tk):
         footer.pack(side="bottom", pady=20)
 
     def create_menu_button(self, parent, text, command):
-        """
-        Function that creates a 'parent' button and then binds it with the event indicated
-        """
+        '''Function that creates a 'parent' button and then binds it with the event indicated
+        '''
         btn = tk.Button(
             parent,
             text=text,
@@ -51,36 +48,51 @@ class StartWindow(tk.Tk):
         btn.bind("<Button-1>", command)
         return btn
 
-    def open_merge_window(self,event):
-        """
-        Function that destroys the Start window and opens Merge window when clicking on the attributed button
-        
-        Parameters:
-        self: parameters and functions that belong to class
-        event: Destroying the Start window and opening the next one when clicking the corresponding button
-        """
-        self.destroy()
-        MergeWindow().mainloop()
+    def open_merge_window(self, event: tk.Event):
+        '''Function that destroys the Start window and opens Merge window when clicking on the attributed button
 
-    def open_verification_window(self,event):
-        """
-        Function that destroys the Start window and opens Verification window when clicking the attributed button
-
-        Parameters:
-        self: parameters and functions that belong to class
-        event: Destroying the Start window and opening the next one when clicking the corresponding button
-        """
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         self.destroy()
-        VerificationWindow().mainloop()
+        merge_window = MergeWindow()
+        merge_window.protocol("WM_DELETE_WINDOW", lambda: self.subwindow_closed(merge_window))
+        merge_window.mainloop()
 
-    def open_configuration_window(self,event):
-        """
-        Function that destroys the Start window and opens Configuration window when clicking the attributed button
-        
-        Parameters: 
-        self: parameters and functions that belong to class
-        event: Destroying the Start window and opening the next one when clicking the corresponding button
-        """
+    def open_verification_window(self, event: tk.Event):
+        '''Function that destroys the Start window and opens Verification window when clicking the attributed button
+
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
         self.destroy()
-        ConfigurationWindow().mainloop()
+        verification_window = VerificationWindow()
+        verification_window.protocol("WM_DELETE_WINDOW", lambda: self.subwindow_closed(verification_window))
+        verification_window.mainloop()
+
+    def open_configuration_window(self, event: tk.Event):
+        '''Function that destroys the Start window and opens Configuration window when clicking the attributed button
+
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
+        self.destroy()
+        configuration_window = ConfigurationWindow()
+        configuration_window.protocol("WM_DELETE_WINDOW", lambda: self.subwindow_closed(configuration_window))
+        configuration_window.mainloop()
+
+    def open_configuration_window(self, event: tk.Event):
+        '''Function that destroys the Start window and opens Configuration window when clicking the attributed button
+
+        :param tkinter.Event event: The event that triggered the function's execution
+        '''
+        self.destroy()
+        configuration_window = ConfigurationWindow()
+        configuration_window.protocol("WM_DELETE_WINDOW", lambda: self.subwindow_closed(configuration_window))
+        configuration_window.mainloop()
+
+    def subwindow_closed(self, window: tk.Tk):
+        '''Opens the Start window when the subwindow is closed
+
+        :param tkinter.Tk window: The subwindow that was closed
+        '''
+        window.destroy()
+        StartWindow().mainloop()
         
