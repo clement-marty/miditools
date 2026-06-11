@@ -107,8 +107,7 @@ class MidiManager:
         active_notes = {}
         unassigned_channel = []
         curr_time = -1
-        midi = md.MidiFile(filepath)
-        print(midi.merged_track)
+        midi = md.MidiFile(filepath[1:-1])
         for msg in midi.merged_track:
             if hasattr(msg, "channel") and msg.channel in channel_to_t_ind:
                 channel = msg.channel
@@ -136,8 +135,8 @@ class MidiManager:
                 unassigned_channel.append(msg.channel)
                 
                 
-            if hasattr(msg, "program_change") and msg.program_change > 9:
-                errors.append(f"Error : Invalid enveloppe ")
+            if hasattr(msg, "program") and msg.program > 9:
+                errors.append(f"Error : Enveloppe chosen n°{msg.program} is invalid.")
 
         for t_ind in sorted(channel_assignments):
             peak = max_count.get(t_ind, 0)
@@ -157,8 +156,8 @@ class MidiManager:
 
 
    
-#f1 = "miditools/midi_tests/159BPM_Beethoven.mid"
-#f2 = "miditools/midi_tests/148BPM_mel.mid"
+#f1 = "midi_tests/tst.mid"
+#f2 = "midi_tests/148BPM_mel.mid"
 #f3 = "miditools/midi_tests/148BPM_chords.mid"
 
 #a = MidiManager.merge([f1, f2], "miditools/midi_tests/svppp.mid")
@@ -166,7 +165,3 @@ class MidiManager:
 #assigmnt[1] = set([1])
 #print(MidiManager.verify(f1, assigmnt))
 # #time added = k*numerator/bpm
-
-
-# #trouver dernière time signature du fichier et ajouter a time_past le temps du fichier actuel modulo temps d'une mesure (denominator*beatpertick) - temps du fichier
-# print(4*96)
