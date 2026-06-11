@@ -11,8 +11,9 @@ class ConfigurationWindow(tk.Tk):
         '''A Tkinter window handling the graphical interface part of verifying the validity of a MIDI file
         '''
         super().__init__()
-        self.geometry("450x300")
         self.title("Configuration Window")
+        self.geometry('640x640')
+        self.resizable(width=False, height=False)
         self.create_widgets()
         self.configure(bg="#1e1e2f")
         self.assignments={}
