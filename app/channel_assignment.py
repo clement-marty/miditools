@@ -10,7 +10,7 @@ class ChannelAssignmentRow(tk.Frame):
         :param int coil_id: The tesla coil's id
         :param str coil_name: The tesla coil's name
         '''
-        super().__init__(master, height=30)
+        super().__init__(master, height=30, bg="#1e1e2f")
         self.coil_id, self.coil_name = coil_id, coil_name
         self.buttons: list[tk.Button] = []
         self.create_widgets()
@@ -18,9 +18,9 @@ class ChannelAssignmentRow(tk.Frame):
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
-        id_label = tk.Label(self, text=f'[coil_{self.coil_id}]')
+        id_label = tk.Label(self, text=f'[coil_{self.coil_id}]', bg="#1e1e2f", fg="#f5f5f9")
         id_label.place(relx=0, rely=0, relwidth=0.1, relheight=1)
-        name_label = tk.Label(self, text=self.coil_name)
+        name_label = tk.Label(self, text=self.coil_name, bg="#1e1e2f", fg="#f5f5f9")
         name_label.place(relx=0.1, rely=0, relwidth=0.1, relheight=1)
 
         for i in range(16):
@@ -56,7 +56,9 @@ class ChannelAssignmentWindow(tk.Toplevel):
         '''
         super().__init__(master)
         self.title('MIDI Channel Assignment')
+        self.geometry('640x180')
         self.resizable(width=False, height=False)
+        self.configure(bg="#1e1e2f")
         self.assignments: dict[int, set[int]] = {
             0: set(), 1: set(), 2: set()
         }
@@ -71,11 +73,11 @@ class ChannelAssignmentWindow(tk.Toplevel):
         '''Creates and places all the window's widgets
         '''
 
-        column_labels_frame = tk.Frame(self, width=600, height=30)
+        column_labels_frame = tk.Frame(self, bg="#1e1e2f")
         for i in range(16):
-            channel_label = tk.Label(column_labels_frame, text=i, width=4)
+            channel_label = tk.Label(column_labels_frame, text=i, width=4, bg="#1e1e2f", fg="#f5f5f9")
             channel_label.place(relx=0.2+(i*0.05), rely=0, relwidth=0.05, relheight=1)
-        column_labels_frame.pack(fill=tk.X)
+        column_labels_frame.place(relx=0.025, y=5, relwidth=0.95, height=30)
 
         self.rows = [
             ChannelAssignmentRow(self, 0, 'Posipi'),
@@ -83,11 +85,11 @@ class ChannelAssignmentWindow(tk.Toplevel):
             ChannelAssignmentRow(self, 2, 'Genepi')
         ]
         for row in self.rows:
-            row.pack(fill=tk.X)
+            row.place(relx=0.025, y=35+(self.rows.index(row)*30), relwidth=0.95, height=30)
 
-        close_btn = tk.Button(self, text='Close')
+        close_btn = tk.Button(self, text='Close', bg="#4f46e5", fg="#f5f5f9")
         close_btn.bind('<Button-1>', self.close)
-        close_btn.pack(side=tk.BOTTOM, fill=tk.X)
+        close_btn.place(relx=0.025, y=135, relwidth=0.95, height=30)
 
     def update_assignments(self, coil: int, channel: int, value: bool) -> None:
         '''Updates the assignments dictionary for a given coil and MIDI channel
