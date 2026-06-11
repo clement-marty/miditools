@@ -19,13 +19,13 @@ class VerificationWindow(tk.Tk):
     def create_widgets(self) -> None:
         '''Creates and places all the window's widgets
         '''
+        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").place(relx=0.05, rely=0.025, relwidth=0.2, relheight=0.05)
+        self.name_file=tk.Label(self, text="", fg="#fafafa", bg="#1e1e2f")
+        self.name_file.place(relx=0.275, rely=0.025, relwidth=0.65, relheight=0.05)
+
         btn_file=tk.Button(self, text="Select file", bg="#4f46e5",fg="#f5f5f9")
         btn_file.bind('<Button-1>',self.select_file)
-        btn_file.place(relx=0.05, rely=0.025, relwidth=0.9, relheight=0.05)
-        
-        tk.Label(self, text="file chosen:",fg="#f5f5f9", bg="#1e1e2f").place(relx=0.05, rely=0.075, relwidth=0.2, relheight=0.05)
-        self.name_file=tk.Label(self, text="", fg="#fafafa", bg="#1e1e2f")
-        self.name_file.place(relx=0.275, rely=0.075, relwidth=0.65, relheight=0.05)
+        btn_file.place(relx=0.05, rely=0.075, relwidth=0.9, relheight=0.05)
 
         btn_channel=tk.Button(self, text='assign channel', bg="#4f46e5",fg="#f5f5f9")
         btn_channel.bind('<Button-1>', self.assign_channels)
